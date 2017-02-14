@@ -1,0 +1,32 @@
+#!/bin/bash -l
+###This script executes the getWindFcstv4.c forecast retrieval program
+###by providing the required input arguments.  The input requirements are
+###loaded by a module (eventually)
+
+if (( $# != 2 )); then
+	echo %%%%%%%% FATAL SYNTAX ERROR! %%%%%%%
+fi
+
+module load EmWxUsers/wfrt_ro/emwxnet
+#module load EmWxUsers/wfrt_ro/mithra
+
+sdate=$1
+edate=$2
+STNP="/home/magcampb/Fcst_Data/wpVerif2.cfg"
+MEMP="/home/magcampb/Fcst_Data/windMems.cfg"
+VARIABLE="SFCWSPD"
+#VARIABLE="SFCTC"
+
+#module load /home/model/privatemodules/verif/$3
+
+date=$(date --date="$sdate" +%Y%m%d)
+while [ "$date" -le "$edate" ]
+	do
+		#echo $date
+
+##	./getWindFcstv4.exe $date 0 0 540 72 "SFCWSPD" "1S2DCS" "WND_HUB1" 60
+		#./getFcst_oper_all.exe $date $IHOUR $LEVEL $SOFF $FLENGTH $VARIABLE $PREPROC $POSPROC $OUTFREQ $STNP $MEMP
+		./getFcst_oper_all.exe $date 0 0 540 172 $VARIABLE "1S2DCS" "NONE" 60 $STNP $MEMP
+		#./getFcst_coperall.exe $date 0 0 540 172 $VARIABLE "1S2DCS" "NONE" 60 $STNP $MEMP
+		date=$(date -d "$date + 1 day" +%Y%m%d)
+	done
